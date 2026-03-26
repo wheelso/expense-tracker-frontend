@@ -1,3 +1,4 @@
+// Dashboard Card Component
 import React from 'react';
 import './Card.css';
 
