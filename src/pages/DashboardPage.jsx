@@ -194,6 +194,7 @@ const DashboardPage = ({ token, userEmail, onSessionExpired }) => {
     (sum, expense) => sum + Number.parseFloat(expense.amount),
     0
   )
+  const hasCategories = categories.length > 0
 
   return (
     <section>
@@ -279,9 +280,12 @@ const DashboardPage = ({ token, userEmail, onSessionExpired }) => {
                 name="category"
                 value={expenseForm.category}
                 onChange={handleExpenseChange}
+                disabled={!hasCategories}
                 required
               >
-                <option value="">Select a category</option>
+                <option value="">
+                  {hasCategories ? 'Select a category' : 'Create a category first'}
+                </option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.name}>
                     {category.name}
@@ -294,9 +298,11 @@ const DashboardPage = ({ token, userEmail, onSessionExpired }) => {
               <button
                 type="submit"
                 className="primary-button"
-                disabled={busyAction === 'expense'}
+                disabled={busyAction === 'expense' || !hasCategories}
               >
-                {busyAction === 'expense'
+                {!hasCategories
+                  ? 'Create category first'
+                  : busyAction === 'expense'
                   ? 'Saving...'
                   : editingExpenseId
                     ? 'Update expense'
