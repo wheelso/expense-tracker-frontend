@@ -208,6 +208,19 @@ const DashboardPage = ({ token, userEmail, onSessionExpired }) => {
           <button type="button" className="secondary-button" onClick={loadDashboard}>
             Refresh data
           </button>
+          <button
+            type="button"
+            className="ghost-button"
+            onClick={() => {
+              resetExpenseForm()
+              resetCategoryForm()
+              setSearchTerm('')
+              setCategoryFilter('all')
+              setFeedback({ type: '', text: '' })
+            }}
+          >
+            Clear form
+          </button>
         </div>
       </div>
 
