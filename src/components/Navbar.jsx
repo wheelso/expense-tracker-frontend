@@ -1,20 +1,38 @@
-// Navigation Component
-import React from 'react';
-import './Navbar.css';
+import { NavLink } from 'react-router-dom'
+import './Navbar.css'
 
-const Navbar = () => {
+const Navbar = ({ isAuthenticated, onLogout }) => {
   return (
-    <>
-      <nav className="navbar">
-        <h1 className="navbar-title">Expense Tracker</h1>
-        <ul className="navbar-links">
-          <li><a href="#home">Home</a></li>
-          <li><a href="#login">Login</a></li>
-          <li><a href="#register">Register</a></li>
-        </ul>
+    <header className="navbar">
+      <NavLink to="/" className="navbar-brand">
+        Penny Pilot
+      </NavLink>
+      <nav className="navbar-links" aria-label="Main navigation">
+        <NavLink to="/" className="navbar-link">
+          Home
+        </NavLink>
+        {isAuthenticated ? (
+          <>
+            <NavLink to="/dashboard" className="navbar-link">
+              Dashboard
+            </NavLink>
+            <button type="button" className="navbar-button" onClick={onLogout}>
+              Log out
+            </button>
+          </>
+        ) : (
+          <>
+            <NavLink to="/login" className="navbar-link">
+              Login
+            </NavLink>
+            <NavLink to="/register" className="navbar-cta">
+              Create account
+            </NavLink>
+          </>
+        )}
       </nav>
-    </>
-  );
-};
+    </header>
+  )
+}
 
-export default Navbar;
+export default Navbar

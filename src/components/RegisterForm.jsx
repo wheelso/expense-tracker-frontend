@@ -1,53 +1,101 @@
-import React, { useState } from 'react';
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { registerUser } from '../lib/api'
 
 const RegisterForm = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const navigate = useNavigate()
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+  })
+  const [error, setError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Register Form Data:', { name, email, password });
-  };
+  const handleChange = (event) => {
+    const { name, value } = event.target
+    setFormData((current) => ({ ...current, [name]: value }))
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    setError('')
+    setIsSubmitting(true)
+
+    try {
+      await registerUser(formData)
+      navigate('/login', {
+        replace: true,
+        state: { message: 'Registration complete. Please log in.' },
+      })
+    } catch (submissionError) {
+      setError(submissionError.message)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
-    <>
-      <form onSubmit={handleSubmit} className="form-container">
-        <h2>Register</h2>
-        <div className="form-group">
-          <label htmlFor="registerName">Name</label>
-          <input
-            type="text"
-            id="registerName"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="registerEmail">Email</label>
-          <input
-            type="email"
-            id="registerEmail"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="registerPassword">Password</label>
-          <input
-            type="password"
-            id="registerPassword"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" className="btn-submit">Submit</button>
-      </form>
-    </>
-  );
-};
+    <section className="auth-page">
+      <div className="auth-card">
+        <p className="eyebrow">New account</p>
+        <h1>Create your expense tracker profile.</h1>
+        <p className="auth-copy">
+          Set up your account to start tracking expenses, organizing categories,
+          and building better spending habits over time.
+        </p>
 
-export default RegisterForm;
+        {error ? <div className="status-banner status-error">{error}</div> : null}
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          <label className="field">
+            <span>Name</span>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Your full name"
+              required
+            />
+          </label>
+
+          <label className="field">
+            <span>Email</span>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="you@example.com"
+              required
+            />
+          </label>
+
+          <label className="field">
+            <span>Password</span>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Create a strong password"
+              minLength="6"
+              required
+            />
+          </label>
+
+          <button type="submit" className="primary-button" disabled={isSubmitting}>
+            {isSubmitting ? 'Creating account...' : 'Register'}
+          </button>
+        </form>
+
+        <p className="auth-switch">
+          Already registered? <Link to="/login">Log in here.</Link>
+        </p>
+      </div>
+    </section>
+  )
+}
+
+export default RegisterForm

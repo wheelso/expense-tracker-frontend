@@ -1,16 +1,12 @@
-// Dashboard Card Component
-import React from 'react';
-import './Card.css';
+import './Card.css'
 
 const Card = ({ title, description }) => {
   return (
-    <>
-      <div className="card">
-        <h3 className="card-title">{title}</h3>
-        <p className="card-description">{description}</p>
-      </div>
-    </>
-  );
-};
+    <article className="feature-card">
+      <h3>{title}</h3>
+      <p>{description}</p>
+    </article>
+  )
+}
 
-export default Card;
+export default Card
